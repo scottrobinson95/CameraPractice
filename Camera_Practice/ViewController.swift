@@ -8,18 +8,53 @@
 
 import UIKit
 
-class ViewController: UIViewController {
 
-    override func viewDidLoad() {
+
+class ViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate
+{
+    @IBOutlet weak var myImageView: UIImageView!
+    
+    var imagePicker = UIImagePickerController()
+    
+    
+    override func viewDidLoad()
+    {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        imagePicker.delegate = self
+        
+    }
+    
+    @IBAction func photosButtonTapped(_ sender: Any)
+    {
+        getPhotoLibrary()
+    }
+    
+    
+    @IBAction func cameraButtonTapped(_ sender: Any)
+    {
+        if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.camera)
+        {
+            imagePicker.sourceType = UIImagePickerControllerSourceType.camera
+            present(imagePicker, animated: true, completion: nil)
+            
+        }
+        else
+        {
+            getPhotoLibrary()
+        }
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    func getPhotoLibrary()
+    {
+        imagePicker.sourceType = UIImagePickerControllerSourceType.photoLibrary
+        present(imagePicker, animated: true, completion: nil)
     }
-
-
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        imagePicker.dismiss(animated: true)
+        {
+            let selectedImage = info[UIImagePickerControllerOriginalImage] as! UIImage
+            self.myImageView.image = selectedImage
+        }
+    }
 }
 
